@@ -66,7 +66,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Target")
 	float CooldownTimer = .6f;
 	
-	FTimerHandle HandleTimer;
+	FTimeline CurveTimeline;
 
 	void CooldownReduction();
 
