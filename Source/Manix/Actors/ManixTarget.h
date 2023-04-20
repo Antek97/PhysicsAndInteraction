@@ -39,7 +39,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UCapsuleComponent* TriggerCapsule;
 
-	UPROPERTY(VisibleAnywhere, Category = "Target")
+	UPROPERTY(VisibleAnywhere)
 	UManixTargetWidget* TextWidget;
 
 	AManixTarget();
@@ -51,13 +51,10 @@ public:
 	void OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
-	void OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
-	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	UFUNCTION()
-	void TimelineProgress(float RunningTime);
+	void DashTimeline(float RunningTime);
 
 	UPROPERTY(EditAnywhere, Category = "Target")
 	float TimeToMove = .85f;
@@ -67,9 +64,8 @@ public:
 	float TargetSpeed = .85f;
 
 	UPROPERTY(EditAnywhere, Category = "Target")
-	float CooldownTimer = 1.f;
+	float CooldownTimer = .6f;
 	
-	FTimeline CurveTimeline;
 	FTimerHandle HandleTimer;
 
 	void CooldownReduction();
@@ -90,10 +86,10 @@ protected:
 	FName StoppedText;
 	
 	UPROPERTY(EditAnywhere, Category = "Timeline")
-	UCurveFloat* CurveFloat;
+	UCurveFloat* DashCurve;
 
 public:	
-	UPROPERTY(EditAnywhere, Category = "Target")
+	UPROPERTY(EditAnywhere)
 	TEnumAsByte<EStatusTarget> StatusTarget = Moving;
 
 	virtual void Tick(float DeltaTime) override;

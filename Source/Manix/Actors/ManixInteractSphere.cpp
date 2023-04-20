@@ -38,20 +38,10 @@ AManixInteractSphere::AManixInteractSphere()
 void AManixInteractSphere::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// Todo: spin Box
-
-	if (CurveFloat)
-	{
-	//	FOnImelineFloat TimelineProgress;
-	//	TimelineProgress.BindUFunction(this, FName("TimelineProgress"));
-	//	CurveTimeline.AddInterpFloat(CurveFloat, TimelineProgress);
-	}
 }
 
 void AManixInteractSphere::NotifyActorBeginOverlap(AActor* OtherActor)
 {
-
 	if (InteractWidget == nullptr)
 	{
 		InteractWidget = Cast<UManixInteractWidget>(WidgetComponent->GetWidget());
@@ -79,12 +69,6 @@ void AManixInteractSphere::NotifyActorEndOverlap(AActor* OtherActor)
 	bNoticicationOverlap = false;
 }
 
-void AManixInteractSphere::ActionRotation(float RunningTime)
-{
-	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
-	RotatingCube->SetRelativeRotation(FRotator(0, DeltaZ, 0));
-}
-
 void AManixInteractSphere::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
@@ -96,11 +80,11 @@ void AManixInteractSphere::Interact(FName Component)
 {
 	if (Component == BouncingBall->GetFName()) 
 	{
-		if (CurveFloat)
+		if (CurveBall)
 		{
 			FOnTimelineFloat TimelineProgress;
 			TimelineProgress.BindUFunction(this, FName("TimelineProgress"));
-			CurveTimeline.AddInterpFloat(CurveFloat, TimelineProgress);
+			CurveTimeline.AddInterpFloat(CurveBall, TimelineProgress);
 			CurveTimeline.SetLooping(true);
 
 			CurveTimeline.PlayFromStart();
@@ -120,6 +104,16 @@ void AManixInteractSphere::LookOver(FName Component)
 				{
 					InteractWidget->UpdateInteractText(InteractText);
 					bFirstTimeFocus = false;
+
+					if (CurveCube)
+					{
+						FOnTimelineFloat ActionRotation;
+						ActionRotation.BindUFunction(this, FName("ActionRotation"));
+						CurveTimeline.AddInterpFloat(CurveCube, ActionRotation);
+						CurveTimeline.SetLooping(false);
+
+						CurveTimeline.PlayFromStart();
+					}
 				}
 			}
 		}
@@ -132,18 +126,8 @@ void AManixInteractSphere::TimelineProgress(float RunningTime)
 	BouncingBall->SetRelativeLocation(FVector(0, 0, BouncingBallDeltaY));
 }
 
-//animacje
-//RunningTime += DeltaTime;
-//float DeltaZCube = Amplitude * FMath::Sin(RunningTime * TimeConstant);
-//RotatingCube->SetRelativeRotation(FRotator(0, DeltaZCube, 0));
-//
-//DeltaYBall = DeltaYBall > 0 ? .25f : 1.5f * FMath::Sin(RunningTime * 1.25f);
-//BouncingBall->AddRelativeLocation(FVector(0, 0, DeltaYBall));
-
-//void AManixInteractSphere::BallBouncing()
-//{
-// 
-//	//RunningTime += DeltaTime;
-//	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
-//	RotatingCube->SetRelativeRotation(FRotator(0, DeltaZ, 0));
-//}
+void AManixInteractSphere::ActionRotation(float RunningTime)
+{
+	float CubeDeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstantRotation);
+	RotatingCube->SetRelativeRotation(FRotator(0, CubeDeltaZ, 0));
+}

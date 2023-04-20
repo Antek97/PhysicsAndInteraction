@@ -48,10 +48,9 @@ void AManixTarget::Tick(float DeltaTime)
 	CurveTimeline.TickTimeline(DeltaTime);
 }
 
-void AManixTarget::TimelineProgress(float RunningTime)
+void AManixTarget::DashTimeline(float RunningTime)
 {
 	float DeltaXBall = FMath::Sin(RunningTime * TimeToMove) * TargetRange;
-	//float DeltaYCapsule = FMath::Sin(RunningTime * speed) * range;
 
 	Target->SetRelativeLocation(FVector(bDirectionDash ? DeltaXBall : -DeltaXBall, 0, 0));
 }
@@ -76,9 +75,6 @@ void AManixTarget::SetStateTarget(EStatusTarget Status)
 		break;
 	case EStatusTarget::Dash:
 
-		TriggerCapsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-		GetWorldTimerManager().UnPauseTimer(HandleTimer);
-		GetWorldTimerManager().SetTimer(HandleTimer, this, &AManixTarget::CooldownReduction, CooldownTimer, false);
 		if (TextWidget)
 		{
 			TextWidget->SetDash(DashText);
@@ -89,6 +85,7 @@ void AManixTarget::SetStateTarget(EStatusTarget Status)
 		break;
 	case EStatusTarget::Stopped:
 
+		TriggerCapsule->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 		if (TextWidget)
 		{
 			TextWidget->SetStopped(StoppedText);
@@ -97,9 +94,7 @@ void AManixTarget::SetStateTarget(EStatusTarget Status)
 
 		break;
 	default:
-
 		GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Red, TEXT("StateIsNull"));
-
 		break;
 	}
 }
@@ -109,12 +104,11 @@ void AManixTarget::OnOverlapBegin(class UPrimitiveComponent* OverlappedComp, cla
 	if (StatusTarget != Stopped)
 	{
 		SetStateTarget(Dash);
-
-		if (CurveFloat)
+		if (DashCurve)
 		{
-			FOnTimelineFloat TimelineProgress;
-			TimelineProgress.BindUFunction(this, FName("TimelineProgress"));
-			CurveTimeline.AddInterpFloat(CurveFloat, TimelineProgress);
+			FOnTimelineFloat DashTimeline;
+			DashTimeline.BindUFunction(this, FName("DashTimeline"));
+			CurveTimeline.AddInterpFloat(DashCurve, DashTimeline);
 			CurveTimeline.SetLooping(false);
 
 			CurveTimeline.PlayFromStart();
@@ -127,21 +121,7 @@ void AManixTarget::OnOverlapEnd(class UPrimitiveComponent* OverlappedComp, class
 
 }
 
-void AManixTarget::OnCompHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-{
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
-	{
-		SetStateTarget(Stopped);
-	}
-}
-
 void AManixTarget::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	SetStateTarget(Stopped);
-}
-
-void AManixTarget::CooldownReduction()
-{
-	TriggerCapsule->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-	GetWorldTimerManager().PauseTimer(HandleTimer);
 }

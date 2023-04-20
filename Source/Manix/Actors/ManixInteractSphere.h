@@ -42,7 +42,7 @@ protected:
 	float Amplitude = 90.f;
 
 	UPROPERTY(EditAnywhere, Category = "Target")
-	float TimeConstant = .5f;
+	float TimeConstantRotation = .5f;
 	float DeltaYBall = 0;
 	float RunningTimeline;
 
@@ -51,9 +51,6 @@ private:
 	bool bNoticicationOverlap = true;
 
 public:	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	UCurveFloat* CurveBall;
-
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	USceneComponent* Root;
 
@@ -72,19 +69,21 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	UCapsuleComponent* TriggerCapsule;
 
+	FTimeline CurveTimeline;
+
 	UFUNCTION()
 	void TimelineProgress(float Value);
 
-	FTimeline CurveTimeline;
-
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION()
 	void ActionRotation(float RunningTime);
 
-	UFUNCTION(BlueprintImplementableEvent)
-	void ActiveRotation();
 protected:
 	UPROPERTY(EditAnywhere, Category = "Timeline")
-	UCurveFloat* CurveFloat;
+	UCurveFloat* CurveBall;
+
+	UPROPERTY(EditAnywhere, Category = "Timeline")
+	UCurveFloat* CurveCube;
 
 	virtual void Tick(float DeltaTime) override;
+
 };
