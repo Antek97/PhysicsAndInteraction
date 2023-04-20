@@ -6,7 +6,7 @@
 #include "TextureResource.h"
 #include "CanvasItem.h"
 #include "UObject/ConstructorHelpers.h"
-#include "ManixMainHudWidget.h"
+#include "Manix/Widgets/ManixMainHudWidget.h"
 
 AManixHUD::AManixHUD()
 {

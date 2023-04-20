@@ -12,10 +12,8 @@
 #include "CollisionQueryParams.h"
 #include "MotionControllerComponent.h"
 #include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
-#include "ManixMainHudWidget.h"
+#include "Manix/Widgets/ManixMainHudWidget.h"
 #include "ManixHUD.h"
-
-#include "DrawDebugHelpers.h" // to delete
 
 DEFINE_LOG_CATEGORY_STATIC(LogFPChar, Warning, All);
 
