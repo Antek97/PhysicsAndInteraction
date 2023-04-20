@@ -79,9 +79,9 @@ void AManixInteractSphere::NotifyActorEndOverlap(AActor* OtherActor)
 	bNoticicationOverlap = false;
 }
 
-void AManixInteractSphere::ActionRotation()
+void AManixInteractSphere::ActionRotation(float RunningTime)
 {
-	float DeltaZ = Amplitude * FMath::Sin(RunningTimeline * TimeConstant);
+	float DeltaZ = Amplitude * FMath::Sin(RunningTime * TimeConstant);
 	RotatingCube->SetRelativeRotation(FRotator(0, DeltaZ, 0));
 }
 
@@ -91,7 +91,6 @@ void AManixInteractSphere::Tick(float DeltaTime)
 	
 	CurveTimeline.TickTimeline(DeltaTime);
 }
-
 
 void AManixInteractSphere::Interact(FName Component)
 {
@@ -131,9 +130,6 @@ void AManixInteractSphere::TimelineProgress(float RunningTime)
 {
 	float BouncingBallDeltaY = FMath::Sin(RunningTime * .1f) * 3000.f;
 	BouncingBall->SetRelativeLocation(FVector(0, 0, BouncingBallDeltaY));
-
-	float DeltaZ = Amplitude * FMath::Sin(RunningTimeline * TimeConstant);
-	RotatingCube->SetRelativeRotation(FRotator(0, DeltaZ, 0));
 }
 
 //animacje

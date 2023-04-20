@@ -38,6 +38,9 @@ public:
 	UPROPERTY(EditAnywhere, Category = "BouncingComponent")
 	FName TextWidget;
 
+	UPROPERTY(EditAnywhere, Category = "BouncingComponent")
+	UMaterial* DefaultMaterial;
+
 protected:
 	virtual void NotifyActorBeginOverlap(AActor* OtherActor) override;
 	virtual void NotifyActorEndOverlap(AActor* OtherActor) override;
@@ -53,9 +56,13 @@ protected:
 
 	void ChangeMaterial();
 
-public:	
+private:
+	bool bIsFirstHit = true;
 
-	TMap<UStaticMeshComponent*, bool/*UMaterial**/> BouncingBlocks;
+public:	
 	UPROPERTY(EditAnywhere)
 	TArray<UStaticMeshComponent*> BouncingBlock;
+	UPROPERTY(EditAnywhere, Category = "BouncingComponent")
+	TArray<UMaterial*> BouncingBlockMaterials;
+
 };

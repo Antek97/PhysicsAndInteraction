@@ -4,6 +4,8 @@
 #include "Manix/BouncingBall/ManixBouncingBlock.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Components/PrimitiveComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Manix/ManixInteractWidget.h"
 #include "Materials/Material.h"
 
@@ -17,13 +19,13 @@ AManixBouncingBlock::AManixBouncingBlock()
 	for (int32 index = 0; index < BouncingBlockQuantity; ++index)
 	{
 		UStaticMeshComponent* StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName(FString::Printf(TEXT("BouncingBlock_%d"), index)));
-		BouncingBlocks.Add(StaticMesh, false);
 		BouncingBlock.Add(StaticMesh);
-		StaticMesh->AttachTo(Root);
+		BouncingBlockMaterials.Add(DefaultMaterial);
+		StaticMesh->SetupAttachment(Root);
 	}
 
 	MainBouncingComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName(FString(TEXT("MainBouncingComponent"))));
-	MainBouncingComponent->AttachTo(Root);
+	MainBouncingComponent->SetupAttachment(Root);
 
 	WidgetComponent = CreateDefaultSubobject<UWidgetComponent>(FName(TEXT("Widget")));
 	WidgetComponent->SetupAttachment(MainBouncingComponent);
@@ -57,14 +59,29 @@ void AManixBouncingBlock::NotifyActorBeginOverlap(AActor* OtherActor)
 
 void AManixBouncingBlock::NotifyActorEndOverlap(AActor* OtherActor)
 {
-	InteractWidget->ToggleInteractVisibility(false);
+	if (InteractWidget)
+	{
+		InteractWidget->ToggleInteractVisibility(false);
+	}
 }
 
 void AManixBouncingBlock::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//Hit
-//zmiana na kazdym materai³u SetMaterial(0, MaterialMarked);
-	GEngine->AddOnScreenDebugMessage(-1, 15.0f, FColor::Yellow, TEXT("Your"));
+	if (bIsFirstHit)
+	{
+		bIsFirstHit = false;
+
+		for (size_t index = 0; index < BouncingBlock.Num(); index++)
+		{
+			if (BouncingBlock[index] != nullptr)
+			{
+				UStaticMeshComponent* BlockMesh = BouncingBlock[index];
+				UMaterial* BlockMaterial = BouncingBlockMaterials[index];
+				BlockMesh->SetMaterial(0, BlockMaterial);
+			}
+		}
+		MainBouncingComponent->SetMaterial(0, DefaultMaterial);
+	}
 }
 
 

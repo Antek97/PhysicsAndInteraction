@@ -45,16 +45,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	UManixInteractWidget* InteractWidget;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Board")
+	UMaterial* MaterialMarked;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Board")
+	UMaterial* MaterialUsed;
+
 protected:
 	UPROPERTY(BlueprintReadOnly)
 	int32 CubesQuantity = 9;
 	UPROPERTY(BlueprintReadOnly)
 	int32 specialCubes = 4;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Board")
-	UMaterial* MaterialMarked;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Board")
-	UMaterial* MaterialUsed;
 
 	virtual void BeginPlay() override;
 
@@ -72,7 +72,7 @@ private:
 
 public:
 
-	UPROPERTY(BlueprintReadOnly, Category = Gameplay)
+	UPROPERTY(EditAnywhere, Category = Gameplay)
 	TArray<UStaticMeshComponent*> BoardComponents;
 	UPROPERTY(BlueprintReadOnly, Category = Gameplay)
 	TArray<TEnumAsByte<EStatusObject>> StateComponents;

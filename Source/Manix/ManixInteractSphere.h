@@ -38,8 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Target")
 	FName InteractText;
 
-	void ActionRotation();
-
 	UPROPERTY(EditAnywhere, Category = "Target")
 	float Amplitude = 90.f;
 
@@ -79,6 +77,11 @@ public:
 
 	FTimeline CurveTimeline;
 
+	UFUNCTION(BlueprintCallable)
+	void ActionRotation(float RunningTime);
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ActiveRotation();
 protected:
 	UPROPERTY(EditAnywhere, Category = "Timeline")
 	UCurveFloat* CurveFloat;
