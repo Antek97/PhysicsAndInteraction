@@ -1,4 +1,4 @@
-# PHYSICS AND INTERACTION TEST - Unreal Engine 4.27.2
+# Physics And Interaction - Unreal Engine 4.27.2
 A simple UE4 C++ project demonstrating object physics behavior and interaction mechanics when pressing 'E'.
 
 Features
